@@ -22,27 +22,40 @@ public abstract class Sensor {
     }
 
     /**
-     * Cada subclase implementa cómo se genera una lectura (polimorfismo).
-     * Debe registrar internamente la lectura y retornar el valor.
-     */
-    public abstract int generarLectura();
-
-    /**
      * Registra un valor en el buffer circular de tamaño fijo.
      * Si el buffer está lleno, sobrescribe la lectura más antigua.
      */
     public void registrarLectura(int valor) {
-        // TODO: implementar buffer circular
-        // Pista: usar indiceActual y cantidadLecturas.
+        // Guarda el valor en la posición actual
+        this.ultimasLecturas[this.indiceActual] = valor;
+
+        // Avanza el índice circularmente usando el módulo de la longitud del arreglo
+        this.indiceActual = (this.indiceActual + 1) % this.ultimasLecturas.length;
+
+        // Incrementa la cantidad de lecturas hasta llegar al tope de la capacidad
+        if (this.cantidadLecturas < this.ultimasLecturas.length) {
+            this.cantidadLecturas++;
+        }
     }
 
     /**
      * Promedio de las lecturas registradas. Si no hay, retorna 0.
      */
     public double promedioUltimasLecturas() {
-        // TODO: implementar
-        return 0;
+        if (this.cantidadLecturas == 0) {
+            return 0;
+        }
+
+        double suma = 0;
+        // Solo itera hasta la cantidad de lecturas reales (no toda la capacidad si no está llena)
+        for (int i = 0; i < this.cantidadLecturas; i++) {
+            suma += this.ultimasLecturas[i];
+        }
+
+        return suma / this.cantidadLecturas;
     }
+
+    public abstract int generarLectura();
 
     /**
      * Indica si un valor está fuera del rango esperado.

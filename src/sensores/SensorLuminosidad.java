@@ -17,13 +17,16 @@ public class SensorLuminosidad extends Sensor {
 
     @Override
     public int generarLectura() {
-        // TODO: implementar
-        return 0;
+        int minimoAceptado = MIN - 50;
+        int maximoAceptado = MAX + 50;
+        int valor = RND.nextInt((maximoAceptado - minimoAceptado) + 1) + minimoAceptado;
+        registrarLectura(valor);
+
+        return valor;
     }
 
     @Override
     public boolean fueraDeRango(int valor) {
-        // TODO: implementar
-        return false;
+        return valor < MIN || valor > MAX;
     }
 }
